@@ -1,0 +1,95 @@
+Hello, This Document for How Queries of our Project Runs.......
+ 
+LOGIN AND SIGNUP::::---
+
+Firstly We have Login Page Where We have all required Login information
+There We Have Two Tables Called admins and students
+
+For Inserting Information in Database We use Below Queries::
+
+QUERY ------->  insert  into admins values(%s,%s,%s)
+
+For Retrieve Information in Database We use Below Queries::
+
+QUERY ------->  select * from admins where admin_id = %s
+        We Fetch all Information from Table and Use It for Password Correction
+
+This Process is  For Admin and it's Same For Student Too....
+
+ALL OTHER OPERATION::::---
+
+You Know After admins and students Table We Have Another Three Table Called ::
+                                                                  1) STDB
+                                                                  2) Preference
+                                                                  3) Qualification
+For Inserting The Data Into This Three Table For Simplicity Purpose We Use Three Different(ADD BUTTON)
+Queries Written Below::
+
+QUERY ------->  insert  into STDB values(%s,%s,%s,%s,%s,%s,%s,%s)
+QUERY ------->  insert into preference values(%s,%s,%s,%s)
+QUERY ------->  insert into qualification values(%s,%s,%s,%s)
+                                                           
+UPDATE BUTTON::
+           Here We Can't Use Inner Join Because Of Attribute Required For Join Is In Where Clause 
+        
+QUERY ------->  update STDB set student_id=%s,name=%s,email=%s,gender=%s,contact=%s,dob=%s,Address=%s where app_id=%s
+QUERY ------->  update preference set pref1=%s,pref2=%s,pref3=%s where app_id=%s
+QUERY ------->  update qualification set type=%s,rank=%s,marks=%s where app_id=%s
+
+DELETE BUTTON::
+           Here We Can't Use Inner Join Because Of Attribute Required For Join Is In Where Clause
+QUERY ------->  delete from preference where app_id=%s
+QUERY ------->  delete from qualification where app_id=%s
+QUERY ------->  delete from STDB where app_id=%s"
+
+Here We Need To Delete Data from SubTables First
+
+FETCH ALL THE DATA IN THIS THREE TABLES::
+
+QUERY -------> select * from STDB inner join preference on STDB.app_id=preference.app_id
+                                  inner join qualification on STDB.app_id=qualification.app_id;  
+
+SEARCH BUTTON::
+
+QUERY -------> select * from STDB inner join preference on STDB.app_id=preference.app_id
+                                  inner join qualification on STDB.app_id=qualification.app_id
+                                  where %s like '%s';
+                                             (OR)
+QUERY -------> select * from STDB where %s LIKE '%s'
+From This I Can Take app_id From That I Can Seach Data From Preference And Qualification Table
+QUERY -------> select pref1,pref2,pref3 from preference where app_id = %s
+QUERY -------> select type,rank,marks from qualification where app_id = %s 
+
+DELETE SPECIFIC STUDENT's ALL DATA Adding Account Too::
+
+QUERY -------> delete STDB,preference,qualification from STDB inner join preference ON STDB.app_id=preference.app_id
+                                                              inner join qualification ON STDB.app_id=qualification.app_id
+                                                              where student_id = %s;
+                                                              
+QUERY ------->delete from students where student_id = %s
+
+                                (OR)
+                                
+For This Firstly We need To Take All app_id(Application ID) Submit By Him/Her
+After That For Each App_id We Need To Delete Student Data
+
+QUERY ------->  select app_id from STDB where student_id = %s
+QUERY ------->  delete from preference where app_id = %s
+QUERY ------->  delete from qualification where app_id = %s
+QUERY ------->  delete from STDB where app_id = %s
+QUERY ------->  delete from students where student_id = %s
+
+SEE DETAILS OF ONE USER::
+
+QUERY ------->  select * from STDB where app_id = %s
+QUERY ------->  select * from Preference where app_id = %s
+QUERY ------->  select * from qualification where app_id = %s
+
+CALCULATE MERIT BUTTON::
+
+QUERY -------> SELECT COUNT(app_id) as count FROM qualification where type = %s AND rank <= %s
+
+                                             
+                        
+
+
